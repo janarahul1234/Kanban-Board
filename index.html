@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- =================== REMIXICON =================== -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
+
+    <!-- =================== CSS =================== -->
+    <link rel="stylesheet" href="./styles.css">
+
+    <!-- =================== TITLE =================== -->
+    <title>Task Management</title>
+</head>
+
+<body>
+    <div class="board">
+        <div class="board__columns" id="board-columns"></div>
+
+        <button class="board__add-board" id="add-board-button">
+            <i class="ri-add-line"></i>
+        </button>
+    </div>
+
+    <div id="model-container"></div>
+
+    <!-- Board column -->
+    <template id="board-template">
+        <div class="board__column" id="board-column">
+            <div class="board__header">
+                <div class="board__header-group">
+                    <div class="board__status"></div>
+
+                    <div class="board__title">
+                        <span class="board__title-text" id="board-title"></span>
+                        <span class="board__task-count" id="task-count"></span>
+                    </div>
+                </div>
+
+                <p class="board__description" id="board-description"></p>
+
+                <div class="board__header-buttons">
+                    <button class="board__header-button" id="edit-board-button">
+                        <i class="ri-edit-line"></i>
+                    </button>
+
+                    <button class="board__header-button" id="remove-board-button">
+                        <i class="ri-delete-bin-line"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="board__tasks" id="board-tasks"></div>
+
+            <div class="board__buttons">
+                <button class="board__add-task" id="add-task-button">
+                    <i class="ri-add-line"></i> Add task
+                </button>
+            </div>
+        </div>
+    </template>
+
+    <!-- Board task -->
+    <template id="task-template">
+        <div draggable="true" class="board__task" id="board-task">
+            <div class="board__task-header">
+                <div class="board__task-status"></div>
+                <span id="task-header"></span>
+            </div>
+
+            <p class="board__task-text" id="task-content"></p>
+
+            <div class="board__task-buttons">
+                <button class="board__task-button" id="edit-task-button">
+                    <i class="ri-edit-line"></i>
+                </button>
+
+                <button class="board__task-button" id="remove-task-button">
+                    <i class="ri-delete-bin-line"></i>
+                </button>
+            </div>
+        </div>
+    </template>
+
+    <!-- Board modal -->
+    <template id="board-model-template">
+        <div class="modal modal--active">
+            <div class="modal__content">
+                <div class="modal__header">
+                    <h3 class="modal__title" id="title-modal"></h3>
+                    <button class="modal__close" id="close-model-button">
+                        <i class="ri-close-large-line"></i>
+                    </button>
+                </div>
+
+                <form method="POST" class="modal__form" id="model-form">
+                    <div class="modal__body">
+                        <div class="model__group">
+                            <label for="title" class="modal__label">Title</label>
+                            <input type="text" class="modal__input" id="title" required />
+                        </div>
+
+                        <div class="model__group">
+                            <span class="modal__label">Color</span>
+
+                            <div class="modal__colors">
+                                <label class="modal__color modal__color--green">
+                                    <input type="radio" name="color" value="green" checked>
+                                    <span class="modal__checkmark"></span>
+                                </label>
+
+                                <label class="modal__color modal__color--yellow">
+                                    <input type="radio" name="color" value="yellow">
+                                    <span class="modal__checkmark"></span>
+                                </label>
+
+                                <label class="modal__color modal__color--orange">
+                                    <input type="radio" name="color" value="orange">
+                                    <span class="modal__checkmark"></span>
+                                </label>
+
+                                <label class="modal__color modal__color--pink">
+                                    <input type="radio" name="color" value="pink">
+                                    <span class="modal__checkmark"></span>
+                                </label>
+
+                                <label class="modal__color modal__color--purple">
+                                    <input type="radio" name="color" value="purple">
+                                    <span class="modal__checkmark"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="model__group">
+                            <label for="description" class="modal__label">Description</label>
+                            <input type="text" class="modal__input" id="description" required />
+                        </div>
+                    </div>
+
+                    <div class="modal__footer">
+                        <button type="button" class="modal__button modal__button--cancel" id="cancel-modal-button">
+                            Cancel
+                        </button>
+                        <button class="modal__button modal__button--submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </template>
+
+    <!-- Task modal -->
+    <template id="task-model-template">
+        <div class="modal modal--active">
+            <div class="modal__content">
+                <div class="modal__header">
+                    <h3 class="modal__title" id="title-modal"></h3>
+                    <button class="modal__close" id="close-model-button">
+                        <i class="ri-close-large-line"></i>
+                    </button>
+                </div>
+
+                <form method="POST" class="modal__form" id="model-form">
+                    <div class="modal__body">
+                        <div class="model__group">
+                            <label for="task-name" class="modal__label">Name</label>
+                            <input type="text" class="modal__input" id="task-name" required />
+                        </div>
+                    </div>
+
+                    <div class="modal__footer">
+                        <button type="button" class="modal__button modal__button--cancel" id="cancel-modal-button">
+                            Cancel
+                        </button>
+                        <button class="modal__button modal__button--submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </template>
+
+    <!-- =================== APP JS =================== -->
+    <script src="./app.js"></script>
+</body>
+
+</html>
